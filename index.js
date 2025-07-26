@@ -1,182 +1,98 @@
-const catsData = [
-    {
-        emotionTags: ["moody"],
-        isGif: false,
-        image: "angry.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody", "insomniac"],
-        isGif: false,
-        image: "angry2.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: false,
-        image: "angry3.jpeg",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["confused", "sad"],
-        isGif: false,
-        image: "confused.jpeg",
-        alt: "A cat looking confused",
-    },
-    {
-        emotionTags: ["dominant", "moody"],
-        isGif: false,
-        image: "dominant.jpeg",
-        alt: "A cat looking dominant",
-    },
-    {
-        emotionTags: ["happy", "relaxed"],
-        isGif: false,
-        image: "happy.jpeg",
-        alt: "A cat looking happy",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: false,
-        image: "hungry.jpeg",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: false,
-        image: "hungry1.jpeg",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["insomniac"],
-        isGif: false,
-        image: "insomnia.jpeg",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["insomniac"],
-        isGif: false,
-        image: "insomnia1.jpeg",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: false,
-        image: "lazy.jpeg",
-        alt: "A cat looking lazy",
-    },
-    {
-        emotionTags: ["scared"],
-        isGif: false,
-        image: "nervous.jpeg",
-        alt: "A cat looking nervous",
-    },
-    {
-        emotionTags: ["sad"],
-        isGif: false,
-        image: "sad.jpeg",
-        alt: "A cat looking sad",
-    },
-    {
-        emotionTags: ["sad", "moody"],
-        isGif: false,
-        image: "sad1.jpeg",
-        alt: "A cat looking sad",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: true,
-        image: "angry.gif",
-        alt: "A cat looking moody",
-    },
-    {
-        emotionTags: ["moody"],
-        isGif: true,
-        image: "angry2.gif",
-        alt: "A cat looking angry",
-    },
-    {
-        emotionTags: ["confused"],
-        isGif: true,
-        image: "confused2.gif",
-        alt: "A cat looking confused",
-    },
-    {
-        emotionTags: ["dominant"],
-        isGif: true,
-        image: "dominant.gif",
-        alt: "A cat looking dominant",
-    },
-    {
-        emotionTags: ["happy"],
-        isGif: true,
-        image: "happy.gif",
-        alt: "A cat looking happy",
-    },
-    {
-        emotionTags: ["hungry", "sad", "confused"],
-        isGif: true,
-        image: "confused.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: true,
-        image: "hungry.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["hungry"],
-        isGif: true,
-        image: "hungry2.gif",
-        alt: "A cat looking hungry",
-    },
-    {
-        emotionTags: ["insomniac", "scared"],
-        isGif: true,
-        image: "insomnia2.gif",
-        alt: "A cat looking insomniac",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: true,
-        image: "lazy.gif",
-        alt: "A cat looking relaxed",
-    },
-    {
-        emotionTags: ["relaxed"],
-        isGif: true,
-        image: "relaxed2.gif",
-        alt: "A cat looking relaxed",
-    },
-    {
-        emotionTags: ["scared", "sad"],
-        isGif: true,
-        image: "nervous.gif",
-        alt: "A cat looking nervous",
-    },
-    {
-        emotionTags: ["scared"],
-        isGif: true,
-        image: "nervous2.gif",
-        alt: "A cat looking scared",
-    },
-    {
-        emotionTags: ["sad"],
-        isGif: true,
-        image: "sad.gif",
-        alt: "A cat looking sad",
-    },
-]
+import {catsData} from './data.js';
+const getImageBtn = document.getElementById('get-image-btn')
+const emotionRadios = document.getElementById('emotion-radios')
+const gifOnlyOption = document.getElementById('gifs-only-option')
+const memesContainer = document.getElementById('meme-modal-inner')
+const closeModalBtn = document.getElementById('meme-modal-close-btn')
+
+emotionRadios.addEventListener('change', headlightSelectedEmotion)
+getImageBtn.addEventListener('click', renderImageToDOM)
+closeModalBtn.addEventListener('click', closeModal)
+
+
 
 function getEmotionsArray(cats){
-/*
-Challenge:
-1. Set up a "for of" in getEmotionsArray to iterate 
-   over the data.
-2. For now, just log out each cat object individually.
-*/
+    const emotionArray=[]
+    cats.forEach(function(cat){
+        cat.emotionTags.forEach(function(emotion){
+            if(!emotionArray.includes(emotion)){
+                emotionArray.push(emotion)
+            }
+        })
+
+    })
+    return emotionArray
 }
 
-getEmotionsArray(catsData)
+
+function renderEmotionCat(cats){
+    const emotionArray = getEmotionsArray(cats)
+    emotionArray.forEach(function(emotion){
+        emotionRadios.innerHTML += `
+        <div class="radio">
+            <label for="${emotion}-option">${emotion}</label>
+            <input type="radio" name="emotion" value="${emotion}" id="${emotion}-option">
+        </div>`
+    })
+
+}
+
+renderEmotionCat(catsData)
+
+
+function headlightSelectedEmotion(e){
+    const allEmotions = document.querySelectorAll('.radio input')
+    allEmotions.forEach(function(emotion){
+        document.getElementById(emotion.id).parentElement.classList.remove('highlight')
+    })
+    document.getElementById(e.target.id).parentElement.classList.add('highlight')
+}
+
+
+function getEmotionImages (){
+    const selectedEmotion = document.querySelector('input[name="emotion"]:checked')
+    if (!selectedEmotion) {
+        return;
+    }
+    const selectedCatsArray = catsData.filter(function(cat){
+        if (gifOnlyOption.checked) {
+            return cat.emotionTags.includes(selectedEmotion.value) && cat.isGif;
+        }
+        return cat.emotionTags.includes(selectedEmotion.value);
+    })
+    return selectedCatsArray;
+
+}
+ 
+function getRandomImage(){
+    const catArray = getEmotionImages()
+    if (catArray.length === 0) {
+        return;
+    }
+    else {
+        const randomIndex = Math.floor(Math.random() * catArray.length)
+        return catArray[randomIndex]
+    }
+
+}
+
+function renderImageToDOM(){
+    const randomCat = getRandomImage()
+    document.getElementById('meme-modal').style.display = 'flex';
+    if (!randomCat) {
+        memesContainer.innerHTML = `<p>No images found for this emotion.</p>`;
+        return;
+    }
+    memesContainer.innerHTML = `
+        <img src="images/${randomCat.image}" alt="${randomCat.alt}">
+    `;
+
+}
+
+function closeModal() {
+    document.getElementById('meme-modal').style.display = 'none';
+    memesContainer.innerHTML = '';
+}
+
+
 
